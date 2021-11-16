@@ -59,15 +59,42 @@ int FahrenPKW::geschwErhoehen(QString g)
         break;
     default:
         geschwindigkeit = 0;
+        break;
     }
 
     return geschwindigkeit;
 }
 
-int FahrenPKW::geschwReduzieren(QString gang)
+int FahrenPKW::geschwReduzieren()
 {
     geschwindigkeit -= 10;
     return geschwindigkeit;
+}
+
+int FahrenPKW::getDefautGeschwMitGang(QString gang)
+{
+    int defautgeschw = 0;
+    switch (gang.toInt()) {
+    case 1:
+        defautgeschw = _DEFAUTGESCHW_1_;
+        break;
+    case 2:
+        defautgeschw = _DEFAUTGESCHW_2_;
+        break;
+    case 3:
+        defautgeschw = _DEFAUTGESCHW_3_;
+        break;
+    case 4:
+        defautgeschw = _DEFAUTGESCHW_4_;
+        break;
+    case 5:
+        defautgeschw = _DEFAUTGESCHW_5_;
+        break;
+    default:
+        defautgeschw = _DEFAUTGESCHW_DEFAULT_;
+    }
+
+    return defautgeschw;
 }
 
 int FahrenPKW::getDrehzahl()
@@ -135,7 +162,7 @@ void FahrenPKW::bildRueckfahrZeigen()
 
 }
 
-void FahrenPKW::setDisplayPKW(QString gang, bool gas, bool bremse,
+void FahrenPKW::setDisplayPKW(QString gang, bool bremse, bool gas,
                               int g, float k, int gk, QString sS, Ui::MainWindow* ui)
 {
     geschwindigkeit = g;
@@ -187,12 +214,66 @@ void FahrenPKW::startInit(Bremse* b, Gang* g, Gaspedal* gas)
 
 void FahrenPKW::rueckFahren()
 {
+    // das Bild von Rueckfahren zeigen
     ;
+    // status = "";
 }
 
-void FahrenPKW::vorfahrenMitGang(QString)
+void FahrenPKW::vorfahrenMitGang(QString gang, Bremse* bremse, Gaspedal* gas)
 {
-    ;
+    // TODO
+    // vorhergehende Gang
+
+    if (motor && !bremse->getBremse() && gas)
+    {
+        geschwErhoehen(gang);
+        drehzahlAendern(gang);
+        kraftstoffVerbrauch();
+        gesamtKilometerZahl();
+    }
+
+    if (bremse->getBremse())
+    {
+        gas->setGaspedal(false);
+        geschwReduzieren();
+
+        if (geschwindigkeit < getDefautGeschwMitGang(gang))
+        {
+            status = "Bitte reduzieren Sie den Gang von ";
+            status += gang + " zu " + QString::number(gang.toInt() - 1);
+        }
+
+        if (geschwindigkeit == 0 || kraftstoffverbrauch == 100)
+        {
+            motor = false;
+            status = "Kraftstoff leer!!!";;
+            return;
+        }
+    }
+
+    if (gang == "5")
+    {
+        // TODO
+        // QTime *time = new QTime();
+        // time->currentTime();
+
+        if (gas->getGaspedale() && !bremse->getBremse())
+        {
+            ;
+            if (geschwindigkeit >= _MAXGESCHW_)
+            {
+                status = "Höchstgeschwindigkeit " + QString::number(_MAXGESCHW_) + " erreicht!";
+            }
+        }
+    }
+
+    if (kraftstoffverbrauch == 100)
+    {
+        motor = false;
+        status = "Kraftstoff leer!!!";
+        return;
+    }
+
 }
 
 

@@ -3,25 +3,86 @@
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
-    , ui(new Ui::MainWindow)
+    , fahrenp(new FahrenPKW(false, 0, 0, 12.8, 20975, "Alles gut."))
+    , bremsep(new Bremse)
+    , gangp(new Gang)
+    , gaspedalp(new Gaspedal)
+    , ui(new Ui::MainWindow)    
 {
     ui->setupUi(this);
+
 }
 
 void MainWindow::keyPressEvent(QKeyEvent* e)
 {
-    if (e->key() == Qt::Key_R)
+    // PKW Status auch stellen
+    if (e->key() == Qt::Key_S)
     {
-        ui->label->setText("R");
+        fahrenp->startInit(bremsep, gangp, gaspedalp);
+        qDebug() << "start = true";
     }
-    else if (e->key() == Qt::Key_1)
+    if (e->key() == Qt::Key_B)
     {
-        ui->label->setText("1");
+        bremsep->setBremse(true);
     }
+    if (e->key() == Qt::Key_G)
+    {
+        gaspedalp->setGaspedal(true);
+    }
+
+    switch (e->key())
+    {
+    case Qt::Key_N:
+        gangp->setGang("N");
+        fahrenp->vorfahrenMitGang(gangp->getGang());
+        break;
+    case Qt::Key_1:
+        gangp->setGang("1");
+        // vorfahren
+        fahrenp->vorfahrenMitGang(gangp->getGang());
+        break;
+    case Qt::Key_2:
+        gangp->setGang("2");
+        fahrenp->vorfahrenMitGang(gangp->getGang());
+        break;
+    case Qt::Key_3:
+        gangp->setGang("3");
+        fahrenp->vorfahrenMitGang(gangp->getGang());
+        break;
+    case Qt::Key_4:
+        gangp->setGang("4");
+        fahrenp->vorfahrenMitGang(gangp->getGang());
+        break;
+    case Qt::Key_5:
+        gangp->setGang("5");
+        fahrenp->vorfahrenMitGang(gangp->getGang());
+        break;
+    case Qt::Key_R:
+        gangp->setGang("R");
+        // rückfahren
+        fahrenp->rueckFahren();
+        break;
+    default:
+        gangp->setGang("1");
+        fahrenp->vorfahrenMitGang(gangp->getGang());
+        break;
+    }
+
+    fahrenp->setDisplayPKW(gangp->getGang(), true, false,
+                           fahrenp->geschwErhoehen(gangp->getGang()),
+                           fahrenp->kraftstoffVerbrauch(),
+                           fahrenp->gesamtKilometerZahl(),
+                           "Vorfahren mit Gang " + gangp->getGang(),
+                           ui);
+
 }
 
 MainWindow::~MainWindow()
 {
     delete ui;
+    delete fahrenp;
+    delete bremsep;
+    delete gangp;
+    delete gaspedalp;
 }
 

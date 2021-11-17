@@ -212,15 +212,56 @@ void FahrenPKW::startInit(Bremse* b, Gang* g, Gaspedal* gas)
     gas->setGaspedal(false);
 }
 
-void FahrenPKW::rueckFahren()
+void FahrenPKW::rueckFahren(QString gang, Bremse* bremse, Gaspedal* gas, Ui::MainWindow* ui)
 {
     // das Bild von Rueckfahren zeigen
-    ;
-    // status = "";
+    ui->label_Bild->setHidden(false);
+    QPixmap pixmap(":/Rueckfahrkamera.jpg");
+    ui->label_Bild->setPixmap(pixmap);
+    ui->label_Bild->show();
+
+    if (motor && !bremse->getBremse() && gas)
+    {
+        geschwErhoehen(gang);
+        drehzahlAendern(gang);
+        kraftstoffVerbrauch();
+        gesamtKilometerZahl();
+    }
+
+    if (bremse->getBremse())
+    {
+        gas->setGaspedal(false);
+        geschwReduzieren();
+
+        if (geschwindigkeit <= 0)
+        {
+            status = "Bitte reduzieren Sie den Gang von ";
+            status += gang + " zu " + QString::number(gang.toInt() - 1);
+        }
+
+        if (geschwindigkeit == 0)
+        {
+            motor = false;
+            status = "Parken";;
+            return;
+        } else if (kraftstoffverbrauch == 100)
+        {
+            status = "Kraftstoff leer!!!";;
+            return;
+        }
+    }
+
+    if (kraftstoffverbrauch == 100)
+    {
+        motor = false;
+        status = "Kraftstoff leer!!!";
+        return;
+    }
 }
 
-void FahrenPKW::vorfahrenMitGang(QString gang, Bremse* bremse, Gaspedal* gas)
+void FahrenPKW::vorfahrenMitGang(QString gang, Bremse* bremse, Gaspedal* gas, Ui::MainWindow* ui)
 {
+    ui->label_Bild->setHidden(true);
     // TODO
     // vorhergehende Gang
 
@@ -237,15 +278,19 @@ void FahrenPKW::vorfahrenMitGang(QString gang, Bremse* bremse, Gaspedal* gas)
         gas->setGaspedal(false);
         geschwReduzieren();
 
-        if (geschwindigkeit < getDefautGeschwMitGang(gang))
+        if (geschwindigkeit <= getDefautGeschwMitGang(gang))
         {
             status = "Bitte reduzieren Sie den Gang von ";
             status += gang + " zu " + QString::number(gang.toInt() - 1);
         }
 
-        if (geschwindigkeit == 0 || kraftstoffverbrauch == 100)
+        if (geschwindigkeit == 0)
         {
             motor = false;
+            status = "Parken";;
+            return;
+        } else if (kraftstoffverbrauch == 100)
+        {
             status = "Kraftstoff leer!!!";;
             return;
         }

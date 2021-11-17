@@ -34,37 +34,37 @@ void MainWindow::keyPressEvent(QKeyEvent* e)
     {
     case Qt::Key_N:
         gangp->setGang("N");
-        fahrenp->vorfahrenMitGang(gangp->getGang(), bremsep, gaspedalp);
+        fahrenp->vorfahrenMitGang(gangp->getGang(), bremsep, gaspedalp, ui);
         break;
     case Qt::Key_1:
         gangp->setGang("1");
         // vorfahren
-        fahrenp->vorfahrenMitGang(gangp->getGang(), bremsep, gaspedalp);
+        fahrenp->vorfahrenMitGang(gangp->getGang(), bremsep, gaspedalp, ui);
         break;
     case Qt::Key_2:
         gangp->setGang("2");
-        fahrenp->vorfahrenMitGang(gangp->getGang(), bremsep, gaspedalp);
+        fahrenp->vorfahrenMitGang(gangp->getGang(), bremsep, gaspedalp, ui);
         break;
     case Qt::Key_3:
         gangp->setGang("3");
-        fahrenp->vorfahrenMitGang(gangp->getGang(), bremsep, gaspedalp);
+        fahrenp->vorfahrenMitGang(gangp->getGang(), bremsep, gaspedalp, ui);
         break;
     case Qt::Key_4:
         gangp->setGang("4");
-        fahrenp->vorfahrenMitGang(gangp->getGang(), bremsep, gaspedalp);
+        fahrenp->vorfahrenMitGang(gangp->getGang(), bremsep, gaspedalp, ui);
         break;
     case Qt::Key_5:
         gangp->setGang("5");
-        fahrenp->vorfahrenMitGang(gangp->getGang(), bremsep, gaspedalp);
+        fahrenp->vorfahrenMitGang(gangp->getGang(), bremsep, gaspedalp, ui);
         break;
     case Qt::Key_R:
         gangp->setGang("R");
         // rückfahren
-        fahrenp->rueckFahren();
+        fahrenp->rueckFahren(gangp->getGang(), bremsep, gaspedalp, ui);
         break;
     default:
         gangp->setGang("1");
-        fahrenp->vorfahrenMitGang(gangp->getGang(), bremsep, gaspedalp);
+        fahrenp->vorfahrenMitGang(gangp->getGang(), bremsep, gaspedalp, ui);
         break;
     }
 

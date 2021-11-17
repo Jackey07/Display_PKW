@@ -5,6 +5,7 @@
 
 #include <QString>
 #include <QTime>
+
 #include "ui_mainwindow.h"
 #include "bremse.h"
 #include "gang.h"
@@ -75,8 +76,8 @@ public:
 
     void startInit(Bremse*, Gang*, Gaspedal*);
 
-    void rueckFahren();
-    void vorfahrenMitGang(QString, Bremse*, Gaspedal*);
+    void rueckFahren(QString, Bremse*, Gaspedal*, Ui::MainWindow*);
+    void vorfahrenMitGang(QString, Bremse*, Gaspedal*, Ui::MainWindow*);
 };
 
 #endif // FAHRENPKW_H
